@@ -45,15 +45,14 @@ services:
     container_name: disk-service
     depends_on:
       - rabbitmq
-      - db
+    ports:
+    - "5672:5672"
+    - "15672:15672"
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: user
       SPRING_RABBITMQ_PASSWORD: userpass
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/cpd
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: userpass
     networks:
       - backend
 
