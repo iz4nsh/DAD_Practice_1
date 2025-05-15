@@ -23,3 +23,44 @@ To run the entire system:
 
 ```bash
 docker-compose up --build
+
+> ⚠️ **Ensure you have Docker and Docker Compose installed.**
+
+Access the API (behind HAProxy) at: [http://localhost/](http://localhost/)
+
+---
+
+## 🧪 Postman Collection
+
+A Postman collection file `api.postman_collection.json` is included at the root of the repository. It contains example requests to test the API functionality, including:
+
+- Create instance
+- Delete instance
+- Delete unassigned disk
+- List instances and disks
+
+---
+
+## 🧱 Database Schema
+
+The system stores information about:
+
+- **Disks**: with fields `id`, `size`, `type`, `status`
+- **Instances**: with fields `id`, `name`, `memory`, `cores`, `ip`, `status`, and a foreign key to a disk
+
+
+## 👥 Team Members and Contributions
+
+### Student 1: **Izan**
+
+- **Implemented**: Database config, API connection, Disk creation logic
+
+- **Key commits**:
+  - Add Disk entity and repository
+  - Connect API to MySQL
+
+- **Top modified files**:
+  - `Disk.java`
+  - `application.properties`
+
+> *(Repeat for other members)*
