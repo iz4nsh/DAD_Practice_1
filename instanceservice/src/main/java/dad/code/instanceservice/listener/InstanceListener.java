@@ -22,7 +22,24 @@ public class InstanceListener {
         this.rabbitTemplate = rabbitTemplate;
     }
 
+        @RabbitListener(queues = "instance-requests")
+    public void handleInstanceRequest(String json) {
+        try {
+            InstanceRequest req = mapper.readValue(json, InstanceRequest.class);
+            System.out.println("Received request to create instance: " + req.getName());
 
+            scheduleStatus(req.getName(), "BUILDING_DISK", null, 5);
+            scheduleStatus(req.getName(), "STARTING", null, 10);
+            scheduleStatus(req.getName(), "INITIALIZING", null, 15);
+            scheduleStatus(req.getName(), "ASSIGNING_IP", null, 20);
+
+            String ip = generateRandomIp();
+            scheduleStatus(req.getName(), "RUNNING", ip, 25);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void scheduleStatus(String name, String status, String ip, int delaySeconds) {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
