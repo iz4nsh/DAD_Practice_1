@@ -25,17 +25,18 @@ public class DiskRequestListener {
 		Disk disk = new Disk(dto.getSize(), Disk.diskType.valueOf(dto.getType().toUpperCase()), Disk.diskStatus.REQUESTED);
 		disk = repository.save(disk);
 		sendStatus(disk);
+		final Disk[] finalDisk = new Disk[] { disk };
 		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.schedule(() -> {
-            disk.setStatus(Disk.diskStatus.INITIALIZING);
-            repository.save(disk);
-            sendStatus(disk); 
+            finalDisk[0].setStatus(Disk.diskStatus.INITIALIZING);
+            repository.save(finalDisk[0]);
+            sendStatus(finalDisk[0]); 
         }, 5, TimeUnit.SECONDS);
 
         executor.schedule(() -> {
-            disk.setStatus(Disk.diskStatus.ASSIGNED);
-            repository.save(disk);
-            sendStatus(disk);
+        	finalDisk[0].setStatus(Disk.diskStatus.ASSIGNED);
+            repository.save(finalDisk[0]);
+            sendStatus(finalDisk[0]);
         }, 15, TimeUnit.SECONDS);
 	}
 	
