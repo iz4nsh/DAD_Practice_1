@@ -1,6 +1,5 @@
 package es.codeurjc.helloworld_spring;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,11 +11,8 @@ import java.util.concurrent.*;
 @Component
 public class DiskRequestListener {
 
-    private final RabbitTemplate rabbitTemplate;
+	private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private final Map<Long, Disk> diskStore = new ConcurrentHashMap<>();
-    private long currentId = 1;
 
     public DiskRequestListener(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -24,53 +20,30 @@ public class DiskRequestListener {
 
     @RabbitListener(queues = "disk-requests")
     public void handle(DiskRequestDto dto) {
-        long id = generateId();
-        Disk disk = new Disk(dto.getSize(),
-                Disk.diskType.valueOf(dto.getType().toUpperCase()),
-                Disk.diskStatus.REQUESTED);
-        setDiskId(disk, id);  
-
-        diskStore.put(id, disk);
-        sendStatus(disk);
+        sendStatus(dto.getId(), dto.getSize(), dto.getType(), "REQUESTED");
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
         executor.schedule(() -> {
-            disk.setStatus(Disk.diskStatus.INITIALIZING);
-            sendStatus(disk);
+            sendStatus(dto.getId(), dto.getSize(), dto.getType(), "INITIALIZING");
         }, 5, TimeUnit.SECONDS);
 
         executor.schedule(() -> {
-            disk.setStatus(Disk.diskStatus.ASSIGNED);
-            sendStatus(disk);
+            sendStatus(dto.getId(), dto.getSize(), dto.getType(), "ASSIGNED");
         }, 15, TimeUnit.SECONDS);
     }
 
-    private synchronized long generateId() {
-        return currentId++;
-    }
-  
-    private void setDiskId(Disk disk, long id) {
-        try {
-            var field = Disk.class.getDeclaredField("id");
-            field.setAccessible(true);
-            field.setLong(disk, id);
-        } catch (Exception e) {
-            throw new RuntimeException("No se pudo asignar ID manualmente al Disk", e);
-        }
-    }
-
-    private void sendStatus(Disk disk) {
+    private void sendStatus(Long id, float size, String type, String status) {
         try {
             String message = objectMapper.writeValueAsString(Map.of(
-                    "id", disk.getId(),
-                    "size", disk.getSize(),
-                    "type", disk.getType().toString(),
-                    "status", disk.getStatus().toString()
+                    "id", id,
+                    "size", size,
+                    "type", type.toUpperCase(),
+                    "status", status
             ));
             rabbitTemplate.convertAndSend("disk-statuses", message);
-        } catch (JsonProcessingException e) {
-            System.err.println("Error al serializar mensaje: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error al serializar estado del disco: " + e.getMessage());
         }
     }
 }

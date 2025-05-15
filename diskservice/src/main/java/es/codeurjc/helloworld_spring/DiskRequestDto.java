@@ -1,17 +1,28 @@
 package es.codeurjc.helloworld_spring;
 
 public class DiskRequestDto {
+	
+		private long id;
 	    private float size;
 	    private String type;
 
 	    public DiskRequestDto() {}
 
-	    public DiskRequestDto(float size, String type) {
+	    public DiskRequestDto(long id, float size, String type) {
+	    	this.id = id;
 	        this.size = size;
 	        this.type = type;
 	    }
 
-	    public float getSize() {
+	    public long getId() {
+			return id;
+		}
+
+		public void setId(long id) {
+			this.id = id;
+		}
+
+		public float getSize() {
 	        return size;
 	    }
 
