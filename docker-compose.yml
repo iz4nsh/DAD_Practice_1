@@ -15,5 +15,17 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"      # Puerto para las conexiones de clientes
+      - "15672:15672"    # Puerto para la consola web de administración
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: userpass
+
 volumes:
   db_data:
+
