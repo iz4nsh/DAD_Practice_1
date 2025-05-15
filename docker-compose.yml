@@ -10,8 +10,6 @@ services:
       MYSQL_DATABASE: cpd
       MYSQL_USER: user
       MYSQL_PASSWORD: userpass
-    ports:
-      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -21,9 +19,6 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     restart: always
-    ports:
-      - "5672:5672" # Conexiones de cliente
-      - "15672:15672" # Interfaz de administración
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: userpass
@@ -43,6 +38,19 @@ services:
       SPRING_RABBITMQ_PASSWORD: userpass
     networks:
       - backend
+
+  haproxy:
+    image: haproxy:2.7
+    container_name: haproxy
+    ports:
+      - "80:80"  # Único puerto expuesto al host
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+      - backend
+    depends_on:
+      - instance-service
+      # - api-service (cuando lo tengas)
 
 volumes:
   db_data:
