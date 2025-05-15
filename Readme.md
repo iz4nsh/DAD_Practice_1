@@ -23,7 +23,7 @@ To run the entire system:
 
 ```bash
 docker-compose up --build
-
+```
 > ⚠️ **Ensure you have Docker and Docker Compose installed.**
 
 Access the API (behind HAProxy) at: [http://localhost/](http://localhost/)
