@@ -39,18 +39,36 @@ services:
     networks:
       - backend
 
+  disk-service:
+    build:
+      context: ./diskservice
+    container_name: disk-service
+    depends_on:
+      - rabbitmq
+      - db
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: user
+      SPRING_RABBITMQ_PASSWORD: userpass
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/cpd
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: userpass
+    networks:
+      - backend
+
   haproxy:
     image: haproxy:2.7
     container_name: haproxy
     ports:
-      - "80:80"  # Único puerto expuesto al host
+      - "80:80"
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     networks:
       - backend
     depends_on:
       - instance-service
-      # - api-service (cuando lo tengas)
+      - disk-service
 
 volumes:
   db_data:
