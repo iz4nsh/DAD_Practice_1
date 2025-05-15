@@ -1,4 +1,4 @@
-package es.codeurjc.helloworld_spring;
+package es.codeurjc.diskservice.config;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;

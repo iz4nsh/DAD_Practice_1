@@ -1,15 +1,15 @@
-package es.codeurjc.helloworld_spring;
+package es.codeurjc.diskservice.model;
 
-public class DiskStatusDto {
+public class DiskStatus {
 	
 	    private long id;
 	    private float size;
 		private String type;
 		private String status;
 
-	    public DiskStatusDto() {}
+	    public DiskStatus() {}
 
-	    public DiskStatusDto(long id, float size, String type, String status) {
+	    public DiskStatus(long id, float size, String type, String status) {
 	        this.id = id;
 	        this.size = size;
 	        this.type = type;

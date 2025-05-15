@@ -1,14 +1,14 @@
-package es.codeurjc.helloworld_spring;
+package es.codeurjc.diskservice.model;
 
-public class DiskRequestDto {
+public class DiskRequest {
 	
 		private long id;
 	    private float size;
 	    private String type;
 
-	    public DiskRequestDto() {}
+	    public DiskRequest() {}
 
-	    public DiskRequestDto(long id, float size, String type) {
+	    public DiskRequest(long id, float size, String type) {
 	    	this.id = id;
 	        this.size = size;
 	        this.type = type;
