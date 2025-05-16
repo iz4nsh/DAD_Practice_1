@@ -26,7 +26,6 @@ public class InstanceListener {
     public void handleInstanceRequest(String json) {
         try {
             InstanceRequest req = mapper.readValue(json, InstanceRequest.class);
-            System.out.println("Received request to create instance: " + req.getName());
 
             scheduleStatus(req.getName(), "BUILDING_DISK", null, 5);
             scheduleStatus(req.getName(), "STARTING", null, 10);
@@ -53,7 +52,6 @@ public class InstanceListener {
                 String msg = mapper.writeValueAsString(update);
                 rabbitTemplate.convertAndSend("instance-statuses", msg);
 
-                System.out.println("Published status '" + status + "' for instance '" + name + "'");
 
             } catch (Exception e) {
                 e.printStackTrace();

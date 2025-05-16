@@ -31,4 +31,18 @@ public class DiskStatus {
 	    public String getStatus() {
 	        return status;
 	    }
+
+		public void setId(long id) {
+			this.id = id;
+		}
+		public void setSize(float size) {
+			this.size = size;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+		
 }
