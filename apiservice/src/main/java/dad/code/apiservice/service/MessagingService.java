@@ -10,13 +10,12 @@ public class MessagingService {
         rabbitTemplate.convertAndSend("disk-requests", message);
     }
 
-    public void sendInstanceRequest(Long instanceId, Long diskId, String name, int memory, int cores) {
+    public void requestInstance(Instance instance){
         Map<String, Object> message = new HashMap<>();
-        message.put("id", instanceId);
-        message.put("diskId", diskId);
-        message.put("name", name);
-        message.put("memory", memory);
-        message.put("cores", cores);
-        rabbitTemplate.convertAndSend("instance-requests", message);
+        message.put("diskId", instance.getDisk().getId());
+        message.put("name", instance.getName());
+        message.put("memory", instance.getMemory());
+        message.put("cores", instance.getCores());
+        rabbitTemplate.convertAndSend("instance-requests", msg);
     }
 }
