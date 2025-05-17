@@ -6,6 +6,7 @@ public class DiskStatus {
 	    private float size;
 		private String type;
 		private String status;
+		private long instanceID;
 
 	    public DiskStatus() {}
 
@@ -32,6 +33,10 @@ public class DiskStatus {
 	        return status;
 	    }
 
+		public long getInstanceId() {
+			return instanceId;
+		}
+
 		public void setId(long id) {
 			this.id = id;
 		}
@@ -43,6 +48,10 @@ public class DiskStatus {
 		}
 		public void setStatus(String status) {
 			this.status = status;
+		}
+		
+		public void setInstanceId(long instanceId) {
+			this.instanceId = instanceId;
 		}
 		
 }

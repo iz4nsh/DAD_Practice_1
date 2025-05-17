@@ -8,7 +8,7 @@ public class ListenerService {
     @RabbitListener(queues = "disk-statuses")
     public void handleDiskStatus(Map<String, Object> msg){
         Long instanceId = ((Number) msg.get("instanceId")).longValue();
-        Long diskId = ((Number) msg.get("id")).longValue();
+        Long id = ((Number) msg.get("id")).longValue();
         String status = (String) msg.get("status");
         Disk disk = diskRepo.findById(diskId).orElse(new Disk());
 
@@ -28,13 +28,13 @@ public class ListenerService {
 
     @RabbitListener(queues = "instance-statuses")
     public void handleInstanceStatus(Map<String, Object> msg){
-        Long id = ((Number) msg.get("id")).longValue();
+        String name = ((String) msg.get("name"));
         String status = (String) msg.get("status");
         String ip = (String) msg.getOrDefault("ip", null);
 
         Instance instance = instanceRepo.findById(id).orElseThrow();
         instance.setStatus(status);
-        
+
         if (ip != null) instance.setIp(ip);
         instanceRepo.save(instance);
     }
