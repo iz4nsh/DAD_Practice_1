@@ -6,7 +6,7 @@ public class DiskStatus {
 	    private float size;
 		private String type;
 		private String status;
-		private long instanceID;
+		private long instanceId;
 
 	    public DiskStatus() {}
 
