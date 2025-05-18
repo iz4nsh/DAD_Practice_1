@@ -32,7 +32,7 @@ public class ListenerService {
         String status = (String) msg.get("status");
         String ip = (String) msg.getOrDefault("ip", null);
 
-        Instance instance = instanceRepo.findByName(name).orElseThrow();
+        Instance instance = instanceRepo.findByName(name).orElseThrow(()-> new RuntimeException("Instance not found with name: " + name));
         instance.setStatus(status);
 
         if (ip != null) instance.setIp(ip);
