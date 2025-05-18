@@ -1,3 +1,14 @@
+package dad.code.apiservice.service;
+
+import dad.code.apiservice.model.Disk;
+import dad.code.apiservice.model.Instance;
+import dad.code.apiservice.repository.DiskRepository;
+import dad.code.apiservice.repository.InstanceRepository;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.Map;
+
 @Service
 public class ListenerService {
 

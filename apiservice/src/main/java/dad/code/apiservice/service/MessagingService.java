@@ -1,3 +1,12 @@
+package dad.code.apiservice.service;
+
+import dad.code.apiservice.model.Instance;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class MessagingService {
     @Autowired private RabbitTemplate rabbitTemplate;
