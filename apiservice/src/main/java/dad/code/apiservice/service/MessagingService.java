@@ -25,18 +25,6 @@ public class MessagingService {
         rabbitTemplate.convertAndSend("disk-requests", request);
     }
 
-    public void sendDiskReleaseRequest(Long diskId, float size, String type) {
-        if (diskId == null)
-            throw new IllegalArgumentException("El diskId no puede ser null");
-        if (type == null || type.isBlank())
-            throw new IllegalArgumentException("El tipo no puede ser null o vacío");
-
-        // En DiskRequest, el instanceId se usa para pasar el id del disco cuando se
-        // libera
-        DiskRequest releaseRequest = new DiskRequest(size, type, diskId);
-        rabbitTemplate.convertAndSend("disk-requests", releaseRequest);
-    }
-
     public void requestInstance(Instance instance) {
         Map<String, Object> message = new HashMap<>();
         message.put("id", instance.getId());

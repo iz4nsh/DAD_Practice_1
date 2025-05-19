@@ -68,8 +68,13 @@ public class InstanceController {
         Instance instance = instanceOpt.get();
         Disk disk = instance.getDisk();
 
-        // Envía la solicitud para liberar disco
-        messagingService.sendDiskReleaseRequest(disk.getId(), disk.getSize(), disk.getType());
+        // Si la instancia tiene disco asociado, desasócialo y pon el estado a UNASSIGNED
+        if (disk != null) {
+            disk.setStatus("UNASSIGNED");
+            instance.setDisk(null); // Desasocia el disco de la instancia
+            // Si tienes un repositorio de discos, guarda el cambio:
+            // diskRepo.save(disk);
+        }
 
         instanceRepo.delete(instance);
 

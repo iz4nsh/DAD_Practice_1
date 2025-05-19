@@ -1,6 +1,5 @@
+es/codeurjc/diskservice/model/DiskRequest.class
 es/codeurjc/diskservice/DiskserviceApplication.class
 es/codeurjc/diskservice/config/RabbitConfig.class
-es/codeurjc/diskservice/model/DiskReleaseRequest.class
-es/codeurjc/diskservice/model/DiskRequest.class
 es/codeurjc/diskservice/model/DiskStatus.class
 es/codeurjc/diskservice/listener/DiskRequestListener.class
