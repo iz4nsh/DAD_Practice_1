@@ -2,6 +2,7 @@ package dad.code.apiservice.controller;
 
 import dad.code.apiservice.model.Disk;
 import dad.code.apiservice.model.Instance;
+import dad.code.apiservice.repository.DiskRepository;
 import dad.code.apiservice.repository.InstanceRepository;
 import dad.code.apiservice.service.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,16 @@ import java.util.Optional;
 @RequestMapping("/api/instances")
 public class InstanceController {
 
+    private final DiskRepository diskRepository;
+
     @Autowired
     private InstanceRepository instanceRepo;
     @Autowired
     private MessagingService messagingService;
+
+    InstanceController(DiskRepository diskRepository) {
+        this.diskRepository = diskRepository;
+    }
 
     // Mostrar todos los servidores creados (paginado)
     @GetMapping
@@ -68,12 +75,12 @@ public class InstanceController {
         Instance instance = instanceOpt.get();
         Disk disk = instance.getDisk();
 
-        // Si la instancia tiene disco asociado, desasócialo y pon el estado a UNASSIGNED
         if (disk != null) {
             disk.setStatus("UNASSIGNED");
-            instance.setDisk(null); // Desasocia el disco de la instancia
-            // Si tienes un repositorio de discos, guarda el cambio:
-            // diskRepo.save(disk);
+            instance.setDisk(null); // Desasociar disco de la instancia
+
+            // Aquí guardamos el disco actualizado (necesitas el repo de discos)
+            this.diskRepository.save(disk);
         }
 
         instanceRepo.delete(instance);
