@@ -14,26 +14,36 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: userpass
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   instance-service:
     build:
       context: ./instanceservice
     container_name: instance-service
     depends_on:
-      - rabbitmq
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
@@ -47,7 +57,10 @@ services:
       context: ./diskservice
     container_name: disk-service
     depends_on:
-      - rabbitmq
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
@@ -61,8 +74,10 @@ services:
       context: ./apiservice
     container_name: apiservice
     depends_on:
-      - db
-      - rabbitmq
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/cpd
       SPRING_DATASOURCE_USERNAME: user
@@ -86,9 +101,12 @@ services:
     networks:
       - backend
     depends_on:
-      - instance-service
-      - disk-service
-      - apiservice
+      instance-service:
+        condition: service_healthy
+      disk-service:
+        condition: service_healthy
+      apiservice:
+        condition: service_healthy
 
 volumes:
   db_data:
