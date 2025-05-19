@@ -33,13 +33,14 @@ public class ListenerService {
 
             Long diskId = ((Number) msg.get("id")).longValue();
             String status = (String) msg.get("status");
-            Float size = ((Number) msg.get("size")).floatValue();
+            Number sizeNum = (Number) msg.get("size");
+            Float size = sizeNum != null ? sizeNum.floatValue() : null;
             String type = (String) msg.get("type");
 
             Disk disk = diskRepo.findById(diskId).orElse(new Disk());
             disk.setId(diskId);
-            disk.setSize(size);
-            disk.setType(type);
+            if (size != null) disk.setSize(size);
+            if (type != null) disk.setType(type);
             disk.setStatus(status);
             diskRepo.save(disk);
 

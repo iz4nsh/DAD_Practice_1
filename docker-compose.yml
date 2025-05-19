@@ -19,8 +19,8 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-    - "5672:5672"
-    - "15672:15672" ## Para hacer pruebas
+      - "5672:5672"
+      - "15672:15672"
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: user
@@ -56,6 +56,26 @@ services:
     networks:
       - backend
 
+  apiservice:
+    build:
+      context: ./apiservice
+    container_name: apiservice
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/cpd
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: userpass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: user
+      SPRING_RABBITMQ_PASSWORD: userpass
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
   haproxy:
     image: haproxy:2.7
     container_name: haproxy
@@ -68,6 +88,7 @@ services:
     depends_on:
       - instance-service
       - disk-service
+      - apiservice
 
 volumes:
   db_data:

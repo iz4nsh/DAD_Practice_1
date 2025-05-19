@@ -11,7 +11,7 @@ public class Disk {
     private String type;
     private String status;
 
-    public Disk(){}
+    public Disk() {}
 
     public Disk(Long id, float size, String type, String status){
         this.id = id;

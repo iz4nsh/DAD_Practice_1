@@ -2,20 +2,19 @@ package dad.code.apiservice.controller;
 
 import dad.code.apiservice.model.Disk;
 import dad.code.apiservice.repository.DiskRepository;
+import dad.code.apiservice.service.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/disks")
 public class DiskController {
 
     @Autowired private DiskRepository diskRepo;
+    @Autowired private MessagingService messagingService;
 
     @GetMapping
     public Page<Disk> getAll(Pageable pageable) {
@@ -29,19 +28,17 @@ public class DiskController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // SOLO ENVÍA LA SOLICITUD AL BROKER, NO GUARDA EN LA BASE DE DATOS
     @PostMapping
-    public ResponseEntity<Disk> create(@RequestBody Disk disk) {
-        Disk saved = diskRepo.save(disk);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(saved.getId()).toUri();
-        return ResponseEntity.created(location).body(saved);
+    public ResponseEntity<?> create(@RequestBody DiskRequest req) {
+        messagingService.sendDiskRequest(null, (int) req.getSize(), req.getType());
+        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         return diskRepo.findById(id).map(disk -> {
-            // Verifica si el disco está asignado a alguna instancia sin usar getInstance()
-            if (disk.getStatus() != null && disk.getStatus().equalsIgnoreCase("ASSIGNED")) {
+            if ("ASSIGNED".equalsIgnoreCase(disk.getStatus())) {
                 return ResponseEntity.status(409).build(); // Conflict: Disk is assigned to an instance
             }
             diskRepo.delete(disk);
