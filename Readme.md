@@ -1,66 +1,198 @@
-# CPD Management System - Distributed Application
+# 🏢 CPD Management System - Distributed Application
 
-This project is part of the subject **Desarrollo de Aplicaciones Distribuidas** (3rd year, Computer Engineering Degree). It consists of the development of a **distributed web application** for managing a data center (CPD), using modern technologies and professional practices.
-
-## 📦 Architecture Overview
-
-The system is composed of multiple microservices:
-
-- `api-service`: Exposes a REST API to manage instances and disks.
-- `disk-service`: Manages disk creation asynchronously.
-- `instance-service`: Manages virtual machine instance creation.
-- `MySQL`: Relational database for persistence.
-- `RabbitMQ`: Message broker for asynchronous communication.
-- `HAProxy`: Load balancer for the API service.
-
-All services are executed as Docker containers and orchestrated with Docker Compose.
+Proyecto para la asignatura **Desarrollo de Aplicaciones Distribuidas** (3º Ingeniería Informática).  
+Desarrolla una **aplicación web distribuida** para la gestión de un centro de proceso de datos (CPD), aplicando tecnologías modernas y buenas prácticas profesionales.
 
 ---
 
-## ⚙️ How to Run the Project
+## 📚 Índice
 
-To run the entire system:
+1. [🔎 Descripción General](#-descripción-general)
+2. [🗺️ Arquitectura del Sistema](#-arquitectura-del-sistema)
+3. [⚙️ Puesta en Marcha](#️-puesta-en-marcha)
+4. [🌐 Endpoints de la API](#-endpoints-de-la-api)
+5. [🗄️ Esquema de la Base de Datos](#️-esquema-de-la-base-de-datos)
+6. [🔄 Comunicación y Balanceo](#-comunicación-y-balanceo)
+7. [🔧 Variables de Entorno y Configuración](#-variables-de-entorno-y-configuración)
+8. [🧪 Colección Postman](#-colección-postman)
+9. [👥 Equipo y Contribuciones](#-equipo-y-contribuciones)
+10. [📎 Recursos y Enlaces](#-recursos-y-enlaces)
+
+---
+
+## 🔎 Descripción General
+
+Este sistema permite gestionar instancias virtuales y discos de un CPD de forma distribuida, soportando concurrencia, balanceo de carga y comunicación asíncrona entre microservicios.
+
+---
+
+## 🗺️ Arquitectura del Sistema
+
+El sistema está compuesto por los siguientes microservicios y componentes:
+
+- **`apiservice1` y `apiservice2`**: Exponen la API REST para gestionar instancias y discos. Balanceados por HAProxy.
+- **`disk-service`**: Gestiona la creación y el ciclo de vida de los discos de forma asíncrona.
+- **`instance-service`**: Gestiona la creación y el ciclo de vida de las instancias virtuales.
+- **`MySQL`**: Base de datos relacional para persistencia.
+- **`RabbitMQ`**: Broker de mensajería para comunicación asíncrona entre servicios.
+- **`HAProxy`**: Balanceador de carga HTTP para los servicios de API.
+
+Todos los servicios se ejecutan en contenedores Docker y se orquestan con Docker Compose.
+
+---
+
+## ⚙️ Puesta en Marcha
+
+### 1️⃣ Requisitos previos
+
+- Docker y Docker Compose instalados
+- (Opcional) Java 17+ y Maven para desarrollo local
+
+### 2️⃣ Clonar el repositorio
+
+```bash
+git clone <url-del-repo>
+cd DAD_Practice_1-1
+```
+
+### 3️⃣ Arrancar todos los servicios
 
 ```bash
 docker-compose up --build
 ```
-> ⚠️ **Ensure you have Docker and Docker Compose installed.**
 
-Access the API (behind HAProxy) at: [http://localhost/](http://localhost/)
+### 4️⃣ Acceso a la aplicación
 
----
-
-## 🧪 Postman Collection
-
-A Postman collection file `api.postman_collection.json` is included at the root of the repository. It contains example requests to test the API functionality, including:
-
-- Create instance
-- Delete instance
-- Delete unassigned disk
-- List instances and disks
+- API disponible en: [http://localhost/](http://localhost/) (a través de HAProxy)
+- Todos los endpoints están documentados abajo.
 
 ---
 
-## 🧱 Database Schema
+## 🌐 Endpoints de la API
 
-The system stores information about:
+### 📦 Instancias
 
-- **Disks**: with fields `id`, `size`, `type`, `status`
-- **Instances**: with fields `id`, `name`, `memory`, `cores`, `ip`, `status`, and a foreign key to a disk
+- `GET /api/instances`  
+  Lista todas las instancias (paginado).
 
+- `GET /api/instances?id=1`  
+  Obtiene una instancia por ID.
 
-## 👥 Team Members and Contributions
+- `POST /api/instances`  
+  Crea una nueva instancia.  
+  **Body ejemplo:**
+  ```json
+  {
+    "name": "Mi instancia",
+    "memory": 2048,
+    "cores": 2,
+    "diskType": "SSD",
+    "diskSize": 100
+  }
+  ```
 
-### Student 1: **Izan**
+- `DELETE /api/instances?id=1`  
+  Elimina una instancia por ID.
 
-- **Implemented**: Database config, API connection, Disk creation logic
+---
 
-- **Key commits**:
-  - Add Disk entity and repository
-  - Connect API to MySQL
+### 💽 Discos
 
-- **Top modified files**:
+- `GET /api/disks`  
+  Lista todos los discos (paginado).
+
+- `GET /api/disks?id=1`  
+  Obtiene un disco por ID.
+
+- `POST /api/disks`  
+  Solicita la creación de un disco.  
+  **Body ejemplo:**
+  ```json
+  {
+    "type": "SSD",
+    "size": 100
+  }
+  ```
+
+- `DELETE /api/disks?id=1`  
+  Elimina un disco por ID (solo si está `UNASSIGNED`).
+
+---
+
+## 🗄️ Esquema de la Base de Datos
+
+- **Disks**
+  - `id` (Long, PK)
+  - `size` (float)
+  - `type` (String)
+  - `status` (String)
+
+- **Instances**
+  - `id` (Long, PK)
+  - `name` (String)
+  - `memory` (int)
+  - `cores` (int)
+  - `ip` (String)
+  - `status` (String)
+  - `disk_id` (Long, FK a Disk)
+
+---
+
+## 🔄 Comunicación y Balanceo
+
+- **Balanceo de carga:**  
+  HAProxy distribuye las peticiones HTTP entre `apiservice1` y `apiservice2` usando round-robin.
+
+- **Comunicación entre microservicios:**  
+  Se realiza mediante colas de RabbitMQ, permitiendo desacoplar la lógica y soportar concurrencia.
+
+---
+
+## 🔧 Variables de Entorno y Configuración
+
+- Todas las conexiones entre servicios (host, puerto, credenciales) se configuran mediante variables de entorno en `docker-compose.yml`.
+- Spring Boot lee estas variables automáticamente (`SPRING_DATASOURCE_URL`, `SPRING_RABBITMQ_HOST`, etc).
+
+---
+
+## 🧪 Colección Postman
+
+Incluida en el repositorio:  
+`api.postman_collection.json`
+
+Permite probar fácilmente:
+- Crear instancia
+- Eliminar instancia
+- Eliminar disco no asignado
+- Listar instancias y discos
+
+---
+
+## 👥 Equipo y Contribuciones
+
+### 👤 Izan
+
+- **Implementación:** Configuración de base de datos, lógica de creación de discos, integración de API y microservicios.
+- **Commits clave:**
+  - Añadido entidad Disk y repositorio
+  - Conexión de API con MySQL
+- **Archivos principales:**
   - `Disk.java`
-  - `application.properties`
+  - `ListenerService.java`
+  - `docker-compose.yml`
 
-> *(Repeat for other members)*
+> *(Agrega aquí más miembros si corresponde)*
+
+---
+
+## 📎 Recursos y Enlaces
+
+- [Documentación oficial de Spring Boot](https://spring.io/projects/spring-boot)
+- [Documentación de Docker Compose](https://docs.docker.com/compose/)
+- [Documentación de HAProxy](https://www.haproxy.org/)
+- [Documentación de RabbitMQ](https://www.rabbitmq.com/documentation.html)
+
+---
+
+**Universidad DAD - Práctica 1-1**  
+¡Gracias por usar este proyecto! 🚀
