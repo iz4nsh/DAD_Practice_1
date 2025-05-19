@@ -37,14 +37,39 @@ public class ListenerService {
             Float size = sizeNum != null ? sizeNum.floatValue() : null;
             String type = (String) msg.get("type");
 
-            Disk disk = diskRepo.findById(diskId).orElse(new Disk());
-            disk.setId(diskId);
-            if (size != null) disk.setSize(size);
-            if (type != null) disk.setType(type);
-            disk.setStatus(status);
-            diskRepo.save(disk);
-
-            System.out.println("Disk actualizado: " + disk);
+            Disk disk;
+            Optional<Disk> diskOpt = diskRepo.findById(diskId);
+            if (diskOpt.isEmpty()) {
+                // Crear el disco si no existe
+                disk = new Disk();
+                if (size != null) disk.setSize(size);
+                if (type != null) disk.setType(type);
+                disk.setStatus(status);
+                try {
+                    diskRepo.save(disk);
+                    System.out.println("Disk creado: " + disk);
+                } catch (Exception ex) {
+                    System.err.println("No se pudo crear el disco (posible conflicto): " + ex.getMessage());
+                    return;
+                }
+            } else {
+                // Recarga el disco antes de modificarlo
+                disk = diskRepo.findById(diskId).orElse(null);
+                if (disk == null) {
+                    System.err.println("El disco fue eliminado antes de poder actualizarlo: " + diskId);
+                    return;
+                }
+                if (size != null) disk.setSize(size);
+                if (type != null) disk.setType(type);
+                disk.setStatus(status);
+                try {
+                    diskRepo.save(disk);
+                    System.out.println("Disk actualizado: " + disk);
+                } catch (Exception ex) {
+                    System.err.println("No se pudo actualizar el disco (posible conflicto): " + ex.getMessage());
+                    return;
+                }
+            }
 
             if ("ASSIGNED".equalsIgnoreCase(status)) {
                 Object instanceIdObj = msg.get("instanceId");
