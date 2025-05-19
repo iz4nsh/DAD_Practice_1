@@ -25,6 +25,6 @@ public class MessagingService {
         message.put("name", instance.getName());
         message.put("memory", instance.getMemory());
         message.put("cores", instance.getCores());
-        rabbitTemplate.convertAndSend("instance-requests", msg);
+        rabbitTemplate.convertAndSend("instance-requests", message);
     }
 }

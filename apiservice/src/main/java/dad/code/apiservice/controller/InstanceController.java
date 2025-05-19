@@ -1,50 +1,61 @@
 package dad.code.apiservice.controller;
 
+import dad.code.apiservice.model.Disk;
 import dad.code.apiservice.model.Instance;
+import dad.code.apiservice.repository.DiskRepository;
 import dad.code.apiservice.repository.InstanceRepository;
-import dad.code.apiservice.service.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.net.URI;
 
-@RestController
-@RequestMapping("/instances")
 
+
+
+@RestController
+@RequestMapping("/api/instances")
 public class InstanceController {
 
     @Autowired private InstanceRepository instanceRepo;
-    @Autowired private MessagingService messagingService;
+
+    @GetMapping
+    public Page<Instance> getAll(Pageable pageable) {
+        return instanceRepo.findAll(pageable);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Instance> getById(@PathVariable Long id) {
+        return instanceRepo.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody InstanceRequest req){
-        Instance instance = new Instance();
-        instance.setName(req.getName());
-        instance.setMemory(req.getMemory());
-        instance.setCores(req.getCores());
-        instance.setStatus("DISK_REQUESTED");
-        instanceRepo.save(instance);
-        messagingService.requestDisk(instance.getId(), req.getDiskSize(), req.getDiskType());
+    public ResponseEntity<Instance> create(@RequestBody Instance instance) {
+        Instance saved = instanceRepo.save(instance);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(saved.getId()).toUri();
+        return ResponseEntity.created(location).body(saved);
+    }
 
-        URI location = URI.create("/instances/" + instance.getId());
-        return ResponseEntity.created(location).build();
+    @PutMapping("/{id}")
+    public ResponseEntity<Instance> update(@PathVariable Long id, @RequestBody Instance instance) {
+        return instanceRepo.findById(id).map(existing -> {
+            instance.setId(id);
+            return ResponseEntity.ok(instanceRepo.save(instance));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
-        Instance instance = instanceRepo.findById(id).orElseThrow();
-        if (instance.getDisk() != null) {
-            instance.getDisk().setStatus("UNASSIGNED");
-            instanceRepo.save(instance);
-        }
-        instanceRepo.delete(instance);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    public Page<Instance> getAll(Pageable pageable){
-        return instanceRepo.findAll(pageable);
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        return instanceRepo.findById(id).map(instance -> {
+            instanceRepo.delete(instance);
+            return ResponseEntity.noContent().build();
+        }).orElse(ResponseEntity.notFound().build());
     }
 }
+

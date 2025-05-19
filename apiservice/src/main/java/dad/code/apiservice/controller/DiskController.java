@@ -7,9 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping("/disks")
+@RequestMapping("/api/disks")
 public class DiskController {
 
     @Autowired private DiskRepository diskRepo;
@@ -19,14 +22,30 @@ public class DiskController {
         return diskRepo.findAll(pageable);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Disk> getById(@PathVariable Long id) {
+        return diskRepo.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Disk> create(@RequestBody Disk disk) {
+        Disk saved = diskRepo.save(disk);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(saved.getId()).toUri();
+        return ResponseEntity.created(location).body(saved);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
-        Disk disk = diskRepo.findById(id).orElseThrow();
-        if(!"UNASSIGNED".equals(disk.getStatus())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Disk must be UNASSIGNED to delete.");
-        }
-        
-        diskRepo.delete(disk);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        return diskRepo.findById(id).map(disk -> {
+            // Verifica si el disco está asignado a alguna instancia sin usar getInstance()
+            if (disk.getStatus() != null && disk.getStatus().equalsIgnoreCase("ASSIGNED")) {
+                return ResponseEntity.status(409).build(); // Conflict: Disk is assigned to an instance
+            }
+            diskRepo.delete(disk);
+            return ResponseEntity.noContent().build();
+        }).orElse(ResponseEntity.notFound().build());
     }
 }
