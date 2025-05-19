@@ -1,5 +1,6 @@
 package dad.code.apiservice.controller;
 
+import dad.code.apiservice.model.Disk;
 import dad.code.apiservice.model.Instance;
 import dad.code.apiservice.repository.InstanceRepository;
 import dad.code.apiservice.service.MessagingService;
@@ -17,8 +18,10 @@ import java.util.Optional;
 @RequestMapping("/api/instances")
 public class InstanceController {
 
-    @Autowired private InstanceRepository instanceRepo;
-    @Autowired private MessagingService messagingService;
+    @Autowired
+    private InstanceRepository instanceRepo;
+    @Autowired
+    private MessagingService messagingService;
 
     // Mostrar todos los servidores creados (paginado)
     @GetMapping
@@ -34,7 +37,8 @@ public class InstanceController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crear instancia (solo envía la solicitud al broker, no guarda en la base de datos)
+    // Crear instancia (solo envía la solicitud al broker, no guarda en la base de
+    // datos)
     @PostMapping
     public ResponseEntity<Instance> create(@RequestBody InstanceRequest req) {
         if (req.getDiskType() == null || req.getDiskType().isBlank() || req.getDiskSize() == null) {
@@ -54,16 +58,22 @@ public class InstanceController {
         return ResponseEntity.created(location).body(instance);
     }
 
-    // Eliminar instancia (solo envía la solicitud al broker, el ListenerService actualizará el disco)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<Instance> instanceOpt = instanceRepo.findById(id);
         if (instanceOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        // Aquí podrías enviar un mensaje al broker para eliminar la instancia si tu arquitectura lo requiere
-        // Por ahora, solo respondemos 202 Accepted para indicar que la operación es asíncrona
-        return ResponseEntity.accepted().build();
-    }
-}
 
+        Instance instance = instanceOpt.get();
+        Disk disk = instance.getDisk();
+
+        // Envía la solicitud para liberar disco
+        messagingService.sendDiskReleaseRequest(disk.getId(), disk.getSize(), disk.getType());
+
+        instanceRepo.delete(instance);
+
+        return ResponseEntity.noContent().build();
+    }
+
+}

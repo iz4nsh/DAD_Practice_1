@@ -25,11 +25,23 @@ public class DiskRequestListener {
 
     @RabbitListener(queues = "disk-requests")
     public void handleDiskRequest(DiskRequest req) {
-        long generatedId = idGenerator.getAndIncrement();
-        // Simula los cambios de estado del disco
-        scheduleStatus(generatedId, req, "REQUESTED", 0);
-        scheduleStatus(generatedId, req, "INITIALIZING", 5);
-        scheduleStatus(generatedId, req, "ASSIGNED", 15);
+        if ("UNASSIGNED".equalsIgnoreCase(req.getType())) {
+            // Marca disco como liberado
+            DiskStatus diskStatus = new DiskStatus();
+            diskStatus.setId(req.getInstanceId()); // Aquí instanceId es el id del disco a liberar
+            diskStatus.setSize(req.getSize());
+            diskStatus.setType(req.getType().toUpperCase());
+            diskStatus.setStatus("UNASSIGNED");
+            diskStatus.setInstanceId(0L);
+
+            rabbitTemplate.convertAndSend("disk-statuses", diskStatus);
+        } else {
+            // Caso normal: creación y asignación de disco
+            long generatedId = idGenerator.getAndIncrement();
+            scheduleStatus(generatedId, req, "REQUESTED", 0);
+            scheduleStatus(generatedId, req, "INITIALIZING", 5);
+            scheduleStatus(generatedId, req, "ASSIGNED", 15);
+        }
     }
 
     private void scheduleStatus(long id, DiskRequest req, String status, int delaySeconds) {

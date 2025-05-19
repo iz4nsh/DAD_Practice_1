@@ -1,5 +1,6 @@
 /home/zthink/Documents/Universidad/DAD/DAD_Practice_1-1/diskservice/src/main/java/es/codeurjc/diskservice/DiskserviceApplication.java
 /home/zthink/Documents/Universidad/DAD/DAD_Practice_1-1/diskservice/src/main/java/es/codeurjc/diskservice/config/RabbitConfig.java
 /home/zthink/Documents/Universidad/DAD/DAD_Practice_1-1/diskservice/src/main/java/es/codeurjc/diskservice/listener/DiskRequestListener.java
+/home/zthink/Documents/Universidad/DAD/DAD_Practice_1-1/diskservice/src/main/java/es/codeurjc/diskservice/model/DiskReleaseRequest.java
 /home/zthink/Documents/Universidad/DAD/DAD_Practice_1-1/diskservice/src/main/java/es/codeurjc/diskservice/model/DiskRequest.java
 /home/zthink/Documents/Universidad/DAD/DAD_Practice_1-1/diskservice/src/main/java/es/codeurjc/diskservice/model/DiskStatus.java
