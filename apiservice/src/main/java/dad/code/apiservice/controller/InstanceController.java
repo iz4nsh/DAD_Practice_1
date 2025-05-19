@@ -1,8 +1,6 @@
 package dad.code.apiservice.controller;
 
-import dad.code.apiservice.model.Disk;
 import dad.code.apiservice.model.Instance;
-import dad.code.apiservice.repository.DiskRepository;
 import dad.code.apiservice.repository.InstanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
