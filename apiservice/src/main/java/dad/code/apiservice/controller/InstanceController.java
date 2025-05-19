@@ -36,9 +36,9 @@ public class InstanceController {
         return instanceRepo.findAll(pageable);
     }
 
-    // Mostrar una instancia por id
-    @GetMapping("/{id}")
-    public ResponseEntity<Instance> getById(@PathVariable Long id) {
+    // Mostrar una instancia por id usando query param ?id=x
+    @GetMapping(params = "id")
+    public ResponseEntity<Instance> getById(@RequestParam("id") Long id) {
         return instanceRepo.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -65,8 +65,8 @@ public class InstanceController {
         return ResponseEntity.created(location).body(instance);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<?> delete(@RequestParam("id") Long id) {
         Optional<Instance> instanceOpt = instanceRepo.findById(id);
         if (instanceOpt.isEmpty()) {
             System.out.println("Intento de borrar instancia no existente con id: " + id);
