@@ -69,6 +69,7 @@ public class InstanceController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<Instance> instanceOpt = instanceRepo.findById(id);
         if (instanceOpt.isEmpty()) {
+            System.out.println("Intento de borrar instancia no existente con id: " + id);
             return ResponseEntity.notFound().build();
         }
 
@@ -76,14 +77,17 @@ public class InstanceController {
         Disk disk = instance.getDisk();
 
         if (disk != null) {
+            System.out.println("Desasignando disco " + disk.getId() + " de la instancia " + id);
             disk.setStatus("UNASSIGNED");
-            instance.setDisk(null); // Desasociar disco de la instancia
-
-            // Aquí guardamos el disco actualizado (necesitas el repo de discos)
+            instance.setDisk(null);
             this.diskRepository.save(disk);
+            System.out.println("Disco " + disk.getId() + " puesto en estado UNASSIGNED");
+        } else {
+            System.out.println("La instancia " + id + " no tiene disco asociado.");
         }
 
         instanceRepo.delete(instance);
+        System.out.println("Instancia " + id + " eliminada correctamente.");
 
         return ResponseEntity.noContent().build();
     }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class DiskRequestListener {
@@ -21,15 +20,14 @@ public class DiskRequestListener {
     }
 
     // Ejemplo de generación de id en el listener
-    private static final AtomicLong idGenerator = new AtomicLong(1);
 
     @RabbitListener(queues = "disk-requests")
     public void handleDiskRequest(DiskRequest req) {
-        long generatedId = idGenerator.getAndIncrement();
-        // Simula los cambios de estado del disco
-        scheduleStatus(generatedId, req, "REQUESTED", 0);
-        scheduleStatus(generatedId, req, "INITIALIZING", 5);
-        scheduleStatus(generatedId, req, "ASSIGNED", 15);
+        long id = req.getInstanceId();
+            // Simula los cambios de estado del disco
+        scheduleStatus(id, req, "REQUESTED", 0);
+        scheduleStatus(id, req, "INITIALIZING", 5);
+        scheduleStatus(id, req, "ASSIGNED", 15);
     }
 
     private void scheduleStatus(long id, DiskRequest req, String status, int delaySeconds) {

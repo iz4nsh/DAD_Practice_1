@@ -39,10 +39,11 @@ public class DiskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         return diskRepo.findById(id).map(disk -> {
-            if ("ASSIGNED".equalsIgnoreCase(disk.getStatus())) {
-                return ResponseEntity.status(409).build(); // Conflict: Disk is assigned to an instance
+            if (!"UNASSIGNED".equalsIgnoreCase(disk.getStatus())) {
+                // Solo se puede eliminar si el disco está UNASSIGNED
+                return ResponseEntity.status(409).body("Disk must be UNASSIGNED to be deleted.");
             }
             diskRepo.delete(disk);
             return ResponseEntity.noContent().build();
