@@ -36,12 +36,22 @@ public class InstanceController {
 
     // Crear instancia (solo envía la solicitud al broker, no guarda en la base de datos)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody InstanceRequest req) {
-        // Enviar mensaje al broker para crear disco e instancia
-        messagingService.sendDiskRequest(null, req.getDiskSize(), req.getDiskType());
-        // Devuelve 202 Accepted y Location (aunque el recurso aún no existe)
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
-        return ResponseEntity.accepted().header("Location", location.toString()).build();
+    public ResponseEntity<Instance> create(@RequestBody InstanceRequest req) {
+        if (req.getDiskType() == null || req.getDiskType().isBlank() || req.getDiskSize() == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        Instance instance = new Instance();
+        instance.setName(req.getName());
+        instance.setMemory(req.getMemory());
+        instance.setCores(req.getCores());
+        instance.setStatus("BUILDING_DISK");
+        instance = instanceRepo.save(instance); // Aquí se genera el id
+        messagingService.sendDiskRequest(instance.getId(), req.getDiskSize(), req.getDiskType());
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(instance.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(instance);
     }
 
     // Eliminar instancia (solo envía la solicitud al broker, el ListenerService actualizará el disco)

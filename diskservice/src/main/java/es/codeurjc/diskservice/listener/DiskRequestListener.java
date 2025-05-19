@@ -41,6 +41,7 @@ public class DiskRequestListener {
                 diskStatus.setSize(req.getSize());
                 diskStatus.setType(req.getType().toUpperCase());
                 diskStatus.setStatus(status);
+                diskStatus.setInstanceId(req.getInstanceId()); // ✅ este es el fix
 
                 rabbitTemplate.convertAndSend("disk-statuses", diskStatus);
 
@@ -49,4 +50,5 @@ public class DiskRequestListener {
             }
         }, delaySeconds, TimeUnit.SECONDS);
     }
+
 }

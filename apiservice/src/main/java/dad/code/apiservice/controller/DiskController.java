@@ -28,9 +28,11 @@ public class DiskController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // SOLO ENVÍA LA SOLICITUD AL BROKER, NO GUARDA EN LA BASE DE DATOS
     @PostMapping
     public ResponseEntity<DiskRequest> create(@RequestBody DiskRequest req) {
+        if (req.getType() == null || req.getType().isBlank() || req.getSize() < 0 ) {
+            return ResponseEntity.badRequest().body(null);
+        }
         messagingService.sendDiskRequest(null, (int) req.getSize(), req.getType());
         // Devuelve el objeto recibido y 202 Accepted
         return ResponseEntity.accepted().body(req);

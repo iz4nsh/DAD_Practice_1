@@ -22,20 +22,22 @@ public class InstanceListener {
 
     @RabbitListener(queues = "instance-requests")
     public void handleInstanceRequest(InstanceRequest req) {
-        scheduleStatus(req.getName(), "BUILDING_DISK", null, 5);
-        scheduleStatus(req.getName(), "STARTING", null, 10);
-        scheduleStatus(req.getName(), "INITIALIZING", null, 15);
-        scheduleStatus(req.getName(), "ASSIGNING_IP", null, 20);
+        Long id = req.getId(); // Asegúrate de que InstanceRequest tiene el campo id
+        scheduleStatus(id, req.getName(), "BUILDING_DISK", null, 5);
+        scheduleStatus(id, req.getName(), "STARTING", null, 10);
+        scheduleStatus(id, req.getName(), "INITIALIZING", null, 15);
+        scheduleStatus(id, req.getName(), "ASSIGNING_IP", null, 20);
 
         String ip = generateRandomIp();
-        scheduleStatus(req.getName(), "RUNNING", ip, 25);
+        scheduleStatus(id, req.getName(), "RUNNING", ip, 25);
     }
 
-    private void scheduleStatus(String name, String status, String ip, int delaySeconds) {
+    private void scheduleStatus(Long id, String name, String status, String ip, int delaySeconds) {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.schedule(() -> {
             try {
                 InstanceStatus update = new InstanceStatus();
+                update.setId(id); // <-- ¡IMPORTANTE!
                 update.setName(name);
                 update.setStatus(status);
                 update.setIp(ip);

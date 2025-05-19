@@ -61,11 +61,10 @@ public class ListenerService {
                 }
 
                 Instance instance = optionalInstance.get();
-                instance.setDisk(disk);
+                instance.setDisk(disk); // Asocia el disco real
                 instanceRepo.save(instance);
 
-                System.out.println("Disk asignado a la instancia: " + instance.getName());
-
+                // Ahora sí, solicita la creación de la instancia al instance-service
                 messagingService.requestInstance(instance);
             }
 
@@ -78,18 +77,19 @@ public class ListenerService {
     @RabbitListener(queues = "instance-statuses")
     public void handleInstanceStatus(Map<String, Object> msg) {
         try {
-            String name = (String) msg.get("name");
+            // Cambia a buscar por id, no por name
+            Long id = msg.get("id") != null ? ((Number) msg.get("id")).longValue() : null;
             String status = (String) msg.get("status");
             String ip = (String) msg.getOrDefault("ip", null);
 
-            if (name == null || status == null) {
+            if (id == null || status == null) {
                 System.err.println("Mensaje de instancia inválido: " + msg);
                 return;
             }
 
-            Optional<Instance> optionalInstance = instanceRepo.findByName(name);
+            Optional<Instance> optionalInstance = instanceRepo.findById(id);
             if (optionalInstance.isEmpty()) {
-                System.err.println("Instancia no encontrada con nombre: " + name);
+                System.err.println("Instancia no encontrada con id: " + id);
                 return;
             }
 
@@ -99,7 +99,7 @@ public class ListenerService {
 
             instanceRepo.save(instance);
 
-            System.out.println("Instancia actualizada: " + name + " -> " + status + (ip != null ? " @ " + ip : ""));
+            System.out.println("Instancia actualizada: " + id + " -> " + status + (ip != null ? " @ " + ip : ""));
 
         } catch (Exception e) {
             System.err.println("Error al procesar instance-status: " + e.getMessage());

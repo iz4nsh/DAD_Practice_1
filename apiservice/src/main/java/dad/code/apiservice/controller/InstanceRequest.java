@@ -4,7 +4,7 @@ public class InstanceRequest {
     private String name;
     private int memory;
     private int cores;
-    private int diskSize;
+    private Integer diskSize;
     private String diskType;
 
     // Getters y setters
@@ -17,7 +17,7 @@ public class InstanceRequest {
     public int getCores() { return cores; }
     public void setCores(int cores) { this.cores = cores; }
 
-    public int getDiskSize() { return diskSize; }
+    public Integer getDiskSize() { return diskSize; }
     public void setDiskSize(int diskSize) { this.diskSize = diskSize; }
 
     public String getDiskType() { return diskType; }

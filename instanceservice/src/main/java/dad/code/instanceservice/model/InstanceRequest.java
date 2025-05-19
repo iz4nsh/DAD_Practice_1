@@ -4,8 +4,10 @@ import lombok.Data;
 
 @Data
 public class InstanceRequest {
+    private Long id; // <--- ¡IMPORTANTE!
     private Long diskId;
     private String name;
     private int memory;
     private int cores;
+
 }
