@@ -1,4 +1,4 @@
-package dad.code.instanceservice.config;
+package dad.code.apiservice.config;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
@@ -9,8 +9,18 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 public class RabbitConfig {
 
     @Bean
+    public Queue diskRequestsQueue() {
+        return new Queue("disk-requests", true);
+    }
+
+    @Bean
+    public Queue diskStatusesQueue() {
+        return new Queue("disk-statuses", true);
+    }
+
+    @Bean
     public Queue instanceRequestsQueue() {
-        return new Queue("instance-requests", true); // durable = true
+        return new Queue("instance-requests", true);
     }
 
     @Bean

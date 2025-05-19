@@ -1,6 +1,5 @@
 package dad.code.instanceservice.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dad.code.instanceservice.model.InstanceRequest;
 import dad.code.instanceservice.model.InstanceStatus;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -16,28 +15,20 @@ import java.util.concurrent.TimeUnit;
 public class InstanceListener {
 
     private final RabbitTemplate rabbitTemplate;
-    private final ObjectMapper mapper = new ObjectMapper();
 
     public InstanceListener(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-        @RabbitListener(queues = "instance-requests")
-    public void handleInstanceRequest(String json) {
-        try {
-            InstanceRequest req = mapper.readValue(json, InstanceRequest.class);
+    @RabbitListener(queues = "instance-requests")
+    public void handleInstanceRequest(InstanceRequest req) {
+        scheduleStatus(req.getName(), "BUILDING_DISK", null, 5);
+        scheduleStatus(req.getName(), "STARTING", null, 10);
+        scheduleStatus(req.getName(), "INITIALIZING", null, 15);
+        scheduleStatus(req.getName(), "ASSIGNING_IP", null, 20);
 
-            scheduleStatus(req.getName(), "BUILDING_DISK", null, 5);
-            scheduleStatus(req.getName(), "STARTING", null, 10);
-            scheduleStatus(req.getName(), "INITIALIZING", null, 15);
-            scheduleStatus(req.getName(), "ASSIGNING_IP", null, 20);
-
-            String ip = generateRandomIp();
-            scheduleStatus(req.getName(), "RUNNING", ip, 25);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String ip = generateRandomIp();
+        scheduleStatus(req.getName(), "RUNNING", ip, 25);
     }
 
     private void scheduleStatus(String name, String status, String ip, int delaySeconds) {
@@ -49,9 +40,7 @@ public class InstanceListener {
                 update.setStatus(status);
                 update.setIp(ip);
 
-                String msg = mapper.writeValueAsString(update);
-                rabbitTemplate.convertAndSend("instance-statuses", msg);
-
+                rabbitTemplate.convertAndSend("instance-statuses", update);
 
             } catch (Exception e) {
                 e.printStackTrace();

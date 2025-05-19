@@ -30,9 +30,10 @@ public class DiskController {
 
     // SOLO ENVÍA LA SOLICITUD AL BROKER, NO GUARDA EN LA BASE DE DATOS
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody DiskRequest req) {
+    public ResponseEntity<DiskRequest> create(@RequestBody DiskRequest req) {
         messagingService.sendDiskRequest(null, (int) req.getSize(), req.getType());
-        return ResponseEntity.accepted().build();
+        // Devuelve el objeto recibido y 202 Accepted
+        return ResponseEntity.accepted().body(req);
     }
 
     @DeleteMapping("/{id}")
