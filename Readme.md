@@ -12,11 +12,12 @@ Desarrolla una **aplicación web distribuida** para la gestión de un centro de 
 3. [⚙️ Puesta en Marcha](#️-puesta-en-marcha)
 4. [🌐 Endpoints de la API](#-endpoints-de-la-api)
 5. [🗄️ Esquema de la Base de Datos](#️-esquema-de-la-base-de-datos)
-6. [🔄 Comunicación y Balanceo](#-comunicación-y-balanceo)
-7. [🔧 Variables de Entorno y Configuración](#-variables-de-entorno-y-configuración)
-8. [🧪 Colección Postman](#-colección-postman)
-9. [👥 Equipo y Contribuciones](#-equipo-y-contribuciones)
-10. [📎 Recursos y Enlaces](#-recursos-y-enlaces)
+6. [🔁 Flujo Funcional](#-flujo-funcional)
+7. [🔄 Comunicación y Balanceo](#-comunicación-y-balanceo)
+8. [🔧 Variables de Entorno y Configuración](#-variables-de-entorno-y-configuración)
+9. [🧪 Colección Postman](#-colección-postman)
+10. [👥 Equipo y Contribuciones](#-equipo-y-contribuciones)
+11. [📎 Recursos y Enlaces](#-recursos-y-enlaces)
 
 ---
 
@@ -135,6 +136,17 @@ docker-compose up --build
   - `ip` (String)
   - `status` (String)
   - `disk_id` (Long, FK a Disk)
+
+---
+
+## 🔄 Flujo Funcional
+- El cliente hace un POST /instances con los datos de la instancia y el disco.
+- El apiservice guarda la instancia en estado DISK_REQUESTED.
+- Se envía un mensaje a disk-requests (cola de RabbitMQ).
+- diskservice simula la creación del disco y envía estados por disk-statuses.
+- Cuando el disco está en estado ASSIGNED, el apiservice lanza la petición a instance-requests.
+- instanceservice lanza la instancia y responde con IP y estado final por instance-statuses.
+- El apiservice actualiza el estado e IP de la instancia en su base de datos.
 
 ---
 
