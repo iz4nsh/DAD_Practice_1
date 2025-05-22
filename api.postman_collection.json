@@ -1,0 +1,106 @@
+{
+  "info": {
+    "name": "Apiservice - Pruebas",
+    "_postman_id": "apiservice-test-collection-id",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Crear instancia",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"vm-001\",\n  \"memory\": 4,\n  \"cores\": 2,\n  \"diskSize\": 50,\n  \"diskType\": \"SSD\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/instances",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "instances"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Listar instancias",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/instances",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "instances"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Eliminar instancia",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:8080/instances/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "instances",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Listar discos",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/disks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "disks"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Eliminar disco",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:8080/disks/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "disks",
+            "1"
+          ]
+        }
+      }
+    }
+  ]
+}
