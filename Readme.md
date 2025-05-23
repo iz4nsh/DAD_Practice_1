@@ -193,8 +193,7 @@ Permite probar fácilmente:
   - `ListenerService.java`
   - `docker-compose.yml`
  
-
-  ### 👤 Álvaro
+### 👤 Álvaro
 
 - **Implementación:** Configuración de la apiservice, colección de pruebas de integración de la API.
 - **Commits clave:**
