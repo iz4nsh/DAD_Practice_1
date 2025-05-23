@@ -192,6 +192,24 @@ Permite probar fácilmente:
   - `Disk.java`
   - `ListenerService.java`
   - `docker-compose.yml`
+ 
+
+  ### 👤 Álvaro
+
+- **Implementación:** Configuración de la apiservice, colección de pruebas de integración de la API.
+- **Commits clave:**
+  - Añadir propiedades de la aplicación
+  - Añadir Dockerfile para la apiservice
+  - Añadir controladores a la apiservice
+  - Añadir repositorios a la apiservice
+  - Añadir servicios a la apiservice
+  - Añadir Postman
+- **Archivos principales:**
+  - `InstanceController.java`
+  - `DiskController.java`
+  - `DiskRepository.java`
+  - `InstanceRepository.java`
+  - `api.postman_collection.json`
 
 > *(Agrega aquí más miembros si corresponde)*
 
