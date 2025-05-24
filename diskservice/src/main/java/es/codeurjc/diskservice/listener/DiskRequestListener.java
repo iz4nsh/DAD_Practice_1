@@ -1,7 +1,7 @@
-package es.codeurjc.diskservice.listener;
+package dad.code.diskservice.listener;
 
-import es.codeurjc.diskservice.model.DiskRequest;
-import es.codeurjc.diskservice.model.DiskStatus;
+import dad.code.diskservice.model.DiskRequest;
+import dad.code.diskservice.model.DiskStatus;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
@@ -19,12 +19,10 @@ public class DiskRequestListener {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    // Ejemplo de generación de id en el listener
-
     @RabbitListener(queues = "disk-requests")
     public void handleDiskRequest(DiskRequest req) {
         long id = req.getInstanceId();
-            // Simula los cambios de estado del disco
+        
         scheduleStatus(id, req, "REQUESTED", 0);
         scheduleStatus(id, req, "INITIALIZING", 5);
         scheduleStatus(id, req, "ASSIGNED", 15);
@@ -39,7 +37,7 @@ public class DiskRequestListener {
                 diskStatus.setSize(req.getSize());
                 diskStatus.setType(req.getType().toUpperCase());
                 diskStatus.setStatus(status);
-                diskStatus.setInstanceId(req.getInstanceId()); // ✅ este es el fix
+                diskStatus.setInstanceId(req.getInstanceId()); 
 
                 rabbitTemplate.convertAndSend("disk-statuses", diskStatus);
 
