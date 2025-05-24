@@ -1,4 +1,4 @@
-package es.codeurjc.diskservice.config;
+package dad.code.diskservice.config;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 @Configuration
 public class RabbitConfig {
 	
-	@Bean
+    @Bean
     public Queue diskRequestsQueue() {
         return new Queue("disk-requests", true);
     }
