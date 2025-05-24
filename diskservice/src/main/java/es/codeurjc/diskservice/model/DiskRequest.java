@@ -1,4 +1,4 @@
-package es.codeurjc.diskservice.model;
+package dad.code.diskservice.model;
 
 public class DiskRequest {
 
