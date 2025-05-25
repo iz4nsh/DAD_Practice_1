@@ -204,6 +204,7 @@ Permite probar fácilmente:
   - [Añadir servicios a la apiservice](https://github.com/iz4nsh/DAD_Practice_1/commit/791fb5658cd956c01f53b076b17d4200ff1b99fe)
   - [Añadir Postman](https://github.com/iz4nsh/DAD_Practice_1/commit/691fc24fd9c719cf26a3ce6800806fe4d168dbe0)
 - **Archivos principales:**
+  - `application.properties`
   - `InstanceController.java`
   - `DiskController.java`
   - `DiskRepository.java`
