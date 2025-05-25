@@ -22,7 +22,7 @@ public class InstanceListener {
 
     @RabbitListener(queues = "instance-requests")
     public void handleInstanceRequest(InstanceRequest req) {
-        Long id = req.getId(); // Asegúrate de que InstanceRequest tiene el campo id
+        Long id = req.getId(); 
         scheduleStatus(id, req.getName(), "BUILDING_DISK", null, 5);
         scheduleStatus(id, req.getName(), "STARTING", null, 10);
         scheduleStatus(id, req.getName(), "INITIALIZING", null, 15);
@@ -37,7 +37,7 @@ public class InstanceListener {
         executor.schedule(() -> {
             try {
                 InstanceStatus update = new InstanceStatus();
-                update.setId(id); // <-- ¡IMPORTANTE!
+                update.setId(id);
                 update.setName(name);
                 update.setStatus(status);
                 update.setIp(ip);

@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'es.codeurjc.helloworld-spring' is invalid and this project uses 'es.codeurjc.helloworld_spring' instead.
+* The original package name 'dad.code.helloworld-spring' is invalid and this project uses 'dad.code.helloworld_spring' instead.
 
 # Getting Started
 

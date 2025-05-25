@@ -12,7 +12,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>es.codeurjc</groupId>
+    <groupId>dad.code</groupId>
     <artifactId>diskservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>diskservice</name>

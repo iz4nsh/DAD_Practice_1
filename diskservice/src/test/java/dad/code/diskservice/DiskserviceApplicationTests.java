@@ -1,4 +1,4 @@
-package es.codeurjc.helloworld_spring;
+package dad.code.diskservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
