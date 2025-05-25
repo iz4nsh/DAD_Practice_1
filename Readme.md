@@ -247,7 +247,7 @@ A continuación se presentan los diagramas clave de la arquitectura:
 
 Representa las tablas principales (`Disk` e `Instance`) y su relación 1:1.
 
-![Diagrama Entidad-Relación](https://github.com/user-attachments/assets/f86d695e-feea-4a76-accb-06fbeb5e0942)
+![Diagrama Entidad-Relación](UMLDiagrams/entitiesDiagram.png)
 
 - `Disk`: contiene campos como `id`, `size`, `type`, `status`.
 - `Instance`: contiene `id`, `name`, `memory`, `cores`, `ip`, `status`, y una clave foránea `disk_id`.
@@ -261,7 +261,7 @@ Refleja la estructura general de la aplicación, separando:
 - `@Repository`: persistencia.
 - `@Entity`: modelo de dominio.
 
-![Diagrama de Clases](https://github.com/user-attachments/assets/45cda4f6-8be2-40c8-b588-19fbcd8070a3)
+![Diagrama de Clases](UMLDiagrams/classDiagram.png)
 
 ---
 
