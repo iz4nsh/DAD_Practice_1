@@ -252,7 +252,7 @@ Refleja la estructura general de la aplicación, separando:
 - `@Repository`: persistencia.
 - `@Entity`: modelo de dominio.
 
-![Diagrama de Clases]()
+![Diagrama de Clases](https://github.com/user-attachments/assets/45cda4f6-8be2-40c8-b588-19fbcd8070a3)
 
 ---
 
