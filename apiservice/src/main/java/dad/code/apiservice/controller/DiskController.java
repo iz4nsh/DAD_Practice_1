@@ -21,7 +21,6 @@ public class DiskController {
         return diskRepo.findAll(pageable);
     }
 
-    // Cambiado para usar ?id=x
     @GetMapping(params = "id")
     public ResponseEntity<Disk> getById(@RequestParam("id") Long id) {
         return diskRepo.findById(id)
@@ -35,16 +34,13 @@ public class DiskController {
             return ResponseEntity.badRequest().body(null);
         }
         messagingService.sendDiskRequest(null, (int) req.getSize(), req.getType());
-        // Devuelve el objeto recibido y 202 Accepted
         return ResponseEntity.accepted().body(req);
     }
 
-    // Cambiado para usar ?id=x
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestParam("id") Long id) {
         return diskRepo.findById(id).map(disk -> {
             if (!"UNASSIGNED".equalsIgnoreCase(disk.getStatus())) {
-                // Solo se puede eliminar si el disco está UNASSIGNED
                 return ResponseEntity.status(409).body("Disk must be UNASSIGNED to be deleted.");
             }
             diskRepo.delete(disk);
