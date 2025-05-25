@@ -215,9 +215,9 @@ Permite probar fácilmente:
 - **Implementación:** Configuración del diskervice.
 - **Commits clave:**
   - [Añadir DiskRequest y DiskStatus del diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/17ee8282973b041c10dbbef892fa7991850f29e8)
-  - [Delegar persistencia a la ApiService en DiskRequestListener](https://github.com/iz4nsh/DAD_Practice_1/commit/a12474d8bdfa86f96246da90c18f7380f5afdc1c)
+  - [Delegar persistencia a la apiservice en DiskRequestListener](https://github.com/iz4nsh/DAD_Practice_1/commit/a12474d8bdfa86f96246da90c18f7380f5afdc1c)
   - [Añadir DiskRequestListener](https://github.com/iz4nsh/DAD_Practice_1/commit/111ba7fe89632d300e0d6da34c19e702288a6e35)
-  - [Implementar el microserrvicio diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/c6f526472d75065293194fc442215d06cd3718d6)
+  - [Implementar el microservicio del diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/c6f526472d75065293194fc442215d06cd3718d6)
   - [Añadir configuración del RabbitMq en el diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/6cb7e85f5562192a7895711e95de5e0f88e6b63f)
 - **Archivos principales:**
   - `DiskRequest.java`
