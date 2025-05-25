@@ -17,7 +17,8 @@ Desarrolla una **aplicación web distribuida** para la gestión de un centro de 
 8. [🔧 Variables de Entorno y Configuración](#-variables-de-entorno-y-configuración)
 9. [🧪 Colección Postman](#-colección-postman)
 10. [👥 Equipo y Contribuciones](#-equipo-y-contribuciones)
-11. [📎 Recursos y Enlaces](#-recursos-y-enlaces)
+11. [📊 Diagramas del Sistema](#-diagramas-del-sistema)
+12. [📎 Recursos y Enlaces](#-recursos-y-enlaces)
 
 ---
 
@@ -226,6 +227,32 @@ Permite probar fácilmente:
   - `DiskRequestListener.java`
   - `RabbitConfig.java`
   - `Disk.java`
+
+---
+
+## 📊 Diagramas del Sistema
+
+A continuación se presentan los diagramas clave de la arquitectura:
+
+### 🗄️ Diagrama de Entidades de la Base de Datos
+
+Representa las tablas principales (`Disk` e `Instance`) y su relación 1:1.
+
+![Diagrama Entidad-Relación](docs/diagrama_entidades.png)
+
+- `Disk`: contiene campos como `id`, `size`, `type`, `status`.
+- `Instance`: contiene `id`, `name`, `memory`, `cores`, `ip`, `status`, y una clave foránea `disk_id`.
+
+### 🧩 Diagrama de Clases
+
+Refleja la estructura general de la aplicación, separando:
+
+- `@Controller`: clases de la API REST.
+- `@Service`: lógica de negocio.
+- `@Repository`: persistencia.
+- `@Entity`: modelo de dominio.
+
+![Diagrama de Clases](https://github.com/user-attachments/assets/f86d695e-feea-4a76-accb-06fbeb5e0942)
 
 ---
 
