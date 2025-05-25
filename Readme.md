@@ -185,14 +185,31 @@ Permite probar fácilmente:
 
 ### 👤 Izan
 
-- **Implementación:** Configuración de base de datos, lógica de creación de discos, integración de API y microservicios.
+### 👤 Izan
+
+- **Implementación:** Desarrollo e integración de los microservicios `diskservice` y `apiservice` en una arquitectura distribuida basada en Spring Boot, RabbitMQ y MySQL.
 - **Commits clave:**
-  - Añadido entidad Disk y repositorio
-  - Conexión de API con MySQL
+  - [Implementar el microservicio del diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/c6f526472d75065293194fc442215d06cd3718d6)  
+    Diseño completo del microservicio `diskservice`, incluyendo clases principales, estructura y configuración inicial.
+  - [Delegar persistencia a la apiservice en DiskRequestListener](https://github.com/iz4nsh/DAD_Practice_1/commit/a12474d8bdfa86f96246da90c18f7380f5afdc1c)  
+    Establecimiento de la lógica de delegación para que `diskservice` envíe eventos a través de RabbitMQ y los persista `apiservice`.
+  - [Añadir listener de mensajes en ApiService](https://github.com/iz4nsh/DAD_Practice_1/commit/c659eec8fb34f9b7649879a937aa29af416ce4ec)  
+    Implementación del componente que recibe mensajes desde RabbitMQ en `apiservice`.
+  - [Persistencia de eventos `disk-statuses` y `instance-statuses` en MySQL](https://github.com/iz4nsh/DAD_Practice_1/commit/6f79cfa413b744b01d64f03d9cbcf7a06ce3960e)  
+    Guardado de los eventos entrantes en la base de datos mediante entidades JPA.
+  - [Añadir configuración del RabbitMq en el diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/6cb7e85f5562192a7895711e95de5e0f88e6b63f)  
+    Configuración de colas, exchanges y bindings en `diskservice` para la comunicación con `apiservice`.
+
 - **Archivos principales:**
-  - `Disk.java`
-  - `ListenerService.java`
-  - `docker-compose.yml`
+  - `diskservice/DiskRequest.java`
+  - `diskservice/DiskStatus.java`
+  - `diskservice/DiskRequestListener.java`
+  - `diskservice/RabbitConfig.java`
+  - `apiservice/StatusMessageListener.java`
+  - `apiservice/DiskStatus.java`
+  - `apiservice/InstanceStatus.java`
+  - `application.yml`
+
  
 ### 👤 Álvaro
 
