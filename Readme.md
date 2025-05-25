@@ -231,11 +231,11 @@ Permite probar fácilmente:
   - [Implementar el microservicio del diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/c6f526472d75065293194fc442215d06cd3718d6)
   - [Añadir configuración del RabbitMq en el diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/6cb7e85f5562192a7895711e95de5e0f88e6b63f)
 - **Archivos principales:**
-  - `DiskRequest.java`
-  - `DiskStatus.java`
-  - `DiskRequestListener.java`
-  - `RabbitConfig.java`
-  - `Disk.java`
+  - [`DiskRequest.java`](diskservice/src/main/java/dad/code/diskservice/model/DiskRequest.java)
+  - [`DiskStatus.java`](diskservice/src/main/java/dad/code/diskservice/model/DiskStatus.java)
+  - [`DiskRequestListener.java`](diskservice/src/main/java/dad/code/diskservice/listener/DiskRequestListener.java)
+  - [`RabbitConfig.java`](diskservice/src/main/java/dad/code/diskservice/config/RabbitConfig.java)
+  - [`Readme.md`](Readme.md)
 
 ---
 
