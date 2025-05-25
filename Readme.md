@@ -182,23 +182,15 @@ Permite probar fácilmente:
 ---
 
 ## 👥 Equipo y Contribuciones
-
-### 👤 Izan
-
 ### 👤 Izan
 
 - **Implementación:** Desarrollo e integración de los microservicios `diskservice` y `apiservice` en una arquitectura distribuida basada en Spring Boot, RabbitMQ y MySQL.
 - **Commits clave:**
-  - [Implementar el microservicio del diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/c6f526472d75065293194fc442215d06cd3718d6)  
-    Diseño completo del microservicio `diskservice`, incluyendo clases principales, estructura y configuración inicial.
-  - [Delegar persistencia a la apiservice en DiskRequestListener](https://github.com/iz4nsh/DAD_Practice_1/commit/a12474d8bdfa86f96246da90c18f7380f5afdc1c)  
-    Establecimiento de la lógica de delegación para que `diskservice` envíe eventos a través de RabbitMQ y los persista `apiservice`.
-  - [Añadir listener de mensajes en ApiService](https://github.com/iz4nsh/DAD_Practice_1/commit/c659eec8fb34f9b7649879a937aa29af416ce4ec)  
-    Implementación del componente que recibe mensajes desde RabbitMQ en `apiservice`.
-  - [Persistencia de eventos `disk-statuses` y `instance-statuses` en MySQL](https://github.com/iz4nsh/DAD_Practice_1/commit/6f79cfa413b744b01d64f03d9cbcf7a06ce3960e)  
-    Guardado de los eventos entrantes en la base de datos mediante entidades JPA.
-  - [Añadir configuración del RabbitMq en el diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/6cb7e85f5562192a7895711e95de5e0f88e6b63f)  
-    Configuración de colas, exchanges y bindings en `diskservice` para la comunicación con `apiservice`.
+  - [Implementar el microservicio del diskservice](https://github.com/iz4nsh/DAD_Practice_1/commit/c6f526472d75065293194fc442215d06cd3718d6) Diseño completo del microservicio `diskservice`, incluyendo clases principales, estructura y configuración inicial.
+  - [Delegar persistencia a la apiservice en DiskRequestListener](https://github.com/iz4nsh/DAD_Practice_1/commit/a12474d8bdfa86f96246da90c18f7380f5afdc1c) Establecimiento de la lógica de delegación para que `diskservice` envíe eventos a través de RabbitMQ y los persista `apiservice`.
+  - [Añadir listener de mensajes en ApiService](https://github.com/iz4nsh/DAD_Practice_1/commit/c659eec8fb34f9b7649879a937aa29af416ce4ec) Implementación del componente que recibe mensajes desde RabbitMQ en `apiservice`.
+  - [Persistencia de eventos `disk-statuses` y `instance-statuses` en MySQL](https://github.com/iz4nsh/DAD_Practice_1/commit/6f79cfa413b744b01d64f03d9cbcf7a06ce3960e) Guardado de los eventos entrantes en la base de datos mediante entidades JPA.
+  - [Refactor general del apiservice e implementación de lógica de actualización de estado](https://github.com/iz4nsh/DAD_Practice_1/commit/eee20684505cc71e0bc3b5a188a5b7a3300ab65f) Mejora estructural del `apiservice`, centralización de la lógica de estado y actualización de entidades desde los mensajes entrantes.
 
 - **Archivos principales:**
   - `diskservice/DiskRequest.java`
